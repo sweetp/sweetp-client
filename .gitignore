@@ -1,0 +1,9 @@
+build/
+out/
+.sonar/
+.gradle/
+*.iws
+*.ipr
+*.iml
+*.un~
+

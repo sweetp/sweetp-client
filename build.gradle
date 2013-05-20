@@ -1,0 +1,56 @@
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+apply plugin: 'groovy'
+apply plugin: 'codenarc'
+apply plugin: 'application'
+apply plugin: com.smokejumperit.gradle.OneJarPlugin
+
+mainClassName = "org.hoschi.sweetp.cli.Cli"
+version = '0.7-SNAPSHOT'
+
+dependencies {
+	//groovy group: 'org.codehaus.groovy', name: 'groovy', version: '1.8.0'
+	groovy 'org.mbte.groovypp:groovypp:0.4.261_1.8.0'
+	compile 'commons-cli:commons-cli:1.2'
+	compile('org.codehaus.groovy.modules.http-builder:http-builder:0.5.1') {
+		exclude module: 'groovy'//, version: ['1.5', '1.7.99']
+	}
+	compile 'log4j:log4j:1.2.16'
+	compile('net.sf.json-lib:json-lib:2.2.3:jdk15@jar') {
+		transitive = true
+	}
+	// test stuff
+	testCompile group: 'junit', name: 'junit', version: '4.8.2'
+	testCompile('org.gmock:gmock:0.8.1') {
+		// gmock wants groovy 1.7.4 but we provide 1.8
+		exclude module: 'groovy-all'
+	}
+}
+
+repositories {
+	mavenCentral()
+	// groovy++ repo
+	mavenRepo url: "http://groovypp.artifactoryonline.com/groovypp/libs-releases-local"
+	// codehaus repo
+	mavenRepo url: 'http://repository.codehaus.org'
+	mavenRepo url: 'http://snapshots.repository.codehaus.org'
+}
+
+codenarc {
+	configFile = file('config/codenarc/rules.groovy')
+}
+
+// plugin config for OneJar and other plugins
+// from https://github.com/RobertFischer/gradle-plugins/
+buildscript {
+	repositories {
+		mavenRepo url: 'http://repo.smokejumperit.com'
+	}
+	dependencies {
+		classpath 'com.smokejumperit:gradle-plugins:0.8.2'
+	}
+}
+
+jar {
+	manifest.mainAttributes("Main-Class": mainClassName)
+}
