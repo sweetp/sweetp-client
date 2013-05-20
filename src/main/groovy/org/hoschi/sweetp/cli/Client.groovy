@@ -35,7 +35,7 @@ class Client {
 	 * @param name of service as url path
 	 * @return output of service call
 	 */
-	@Typed(TypePolicy.DYNAMIC)
+	@Typed(TypePolicy.DYNAMIC) // with "mixed" catch clause didn't work
 	String call(String project, String name, Map query = [:]) {
 		log.info "call service $name"
 		try {
