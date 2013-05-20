@@ -53,9 +53,9 @@ class Client {
 			if (ex.response.status == 404) {
 				throw new NoServiceFoundException(name)
 			} else if (ex.response.status == 500) {
-                runtimeException = new RuntimeException("Error: $ex.response.data.service")
+                runtimeException = new RuntimeException("Error: $ex.response.data.service\n")
             } else {
-				runtimeException = new RuntimeException("An error occured during reuqest to $name with status code $ex.response.status. Have a look at the server logs or the stack trace of this exception.")
+				runtimeException = new RuntimeException("An error occured during reuqest to $name with status code $ex.response.status. Have a look at the server logs or the stack trace of this exception.\n")
 			}
             runtimeException.setStackTrace(ex.stackTrace)
             throw runtimeException
