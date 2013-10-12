@@ -43,6 +43,7 @@ by Stefan Gojan
 
 		builder.identity {
 			h(longOpt: 'help', 'prints this help text')
+            v(longOpt: 'version', 'prints the version number')
 			i(longOpt: 'info', 'is more verbose')
 			d(longOpt: 'debug', 'is most verbose')
 			init(args: 1, argName: 'projectName', longOpt: 'initialize',
@@ -75,12 +76,16 @@ by Stefan Gojan
 		}
 
 		try {
+            if (options.v) {
+                this.printVersionFromFile();
+                return
+            }
+
 			if (options.h ||
 					(options.arguments().isEmpty() && !options.init)) {
 				builder.usage()
 				return
 			}
-
 
 			Map params = [:]
 			if (options.Ps) {
@@ -130,6 +135,16 @@ by Stefan Gojan
 			}
 		}
 	}
+
+    /**
+     * Print version and revision of project.
+     * @return
+     */
+    def printVersionFromFile() {
+        def config = new ConfigSlurper().parse(this.class.getResource('/application.properties'))
+        println 'Version: ' + config.version
+        println 'Revision: ' + config.revision
+    }
 
 	/**
 	 * Create instances for Cli, Client and Config. Spawn actions method to do

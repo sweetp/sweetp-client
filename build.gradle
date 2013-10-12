@@ -1,3 +1,5 @@
+import org.apache.tools.ant.filters.*
+
 apply plugin: 'eclipse'
 apply plugin: 'idea'
 apply plugin: 'groovy'
@@ -6,7 +8,21 @@ apply plugin: 'application'
 apply plugin: com.smokejumperit.gradle.OneJarPlugin
 
 mainClassName = "org.hoschi.sweetp.cli.Cli"
-version = '0.7-SNAPSHOT'
+
+project.ext {
+    revision = null
+}
+
+def getVersionFromFile() {
+    def config = new ConfigSlurper().parse(new File("$projectDir/src/main/resources/application.properties").toURL())
+    return config.version
+}
+version = getVersionFromFile() //'0.7-SNAPSHOT'
+
+def getGitHash() {
+    return "git rev-parse --short HEAD".execute().text.trim()
+}
+project.ext.revision = getGitHash()
 
 dependencies {
 	//groovy group: 'org.codehaus.groovy', name: 'groovy', version: '1.8.0'
@@ -53,4 +69,10 @@ buildscript {
 
 jar {
 	manifest.mainAttributes("Main-Class": mainClassName)
+}
+
+processResources {
+    filter ReplaceTokens, tokens: [
+            "revision": project.ext.revision
+    ]
 }
