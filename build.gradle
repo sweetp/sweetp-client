@@ -76,3 +76,7 @@ processResources {
             "revision": project.ext.revision
     ]
 }
+
+task version << {
+    println "version of $project.name is $project.version ($project.ext.revision)"
+}
